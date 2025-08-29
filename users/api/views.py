@@ -128,17 +128,25 @@ class StorageInfoView(APIView):
 
     def get(self, request):
         from django.conf import settings
-        user = request.user
+        out = {}
         try:
-            field_storage = user._meta.get_field('profile_image').storage.__class__.__name__
-        except Exception:
-            field_storage = None
-        return Response({
-            "DEFAULT_FILE_STORAGE": getattr(settings, 'DEFAULT_FILE_STORAGE', None),
-            "CLOUDINARY_URL_present": bool(os.environ.get('CLOUDINARY_URL')),
-            "default_storage": default_storage.__class__.__name__,
-            "profile_image_storage": field_storage,
-        })
+            out["DEFAULT_FILE_STORAGE"] = getattr(settings, 'DEFAULT_FILE_STORAGE', None)
+        except Exception as e:
+            out["DEFAULT_FILE_STORAGE"] = f"error: {e}"
+        try:
+            out["CLOUDINARY_URL_present"] = bool(os.environ.get('CLOUDINARY_URL'))
+        except Exception as e:
+            out["CLOUDINARY_URL_present"] = f"error: {e}"
+        try:
+            out["default_storage"] = default_storage.__class__.__name__
+        except Exception as e:
+            out["default_storage"] = f"error: {e}"
+        try:
+            user = request.user
+            out["profile_image_storage"] = user._meta.get_field('profile_image').storage.__class__.__name__
+        except Exception as e:
+            out["profile_image_storage"] = f"error: {e}"
+        return Response(out)
 
 
 # -----------------------------------------------------------
