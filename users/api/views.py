@@ -128,6 +128,7 @@ class StorageInfoView(APIView):
 
     def get(self, request):
         from django.conf import settings
+        import os
         out = {}
         try:
             out["DEFAULT_FILE_STORAGE"] = getattr(settings, 'DEFAULT_FILE_STORAGE', None)
