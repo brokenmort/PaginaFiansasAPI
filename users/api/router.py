@@ -5,6 +5,7 @@ from users.api.views import (
     LogoutView, UserInfoView, LoginView, RefreshView, approve_signup_view,
     StorageInfoView,
 )
+from users.api.upload import ProfileImageUploadView
 
 urlpatterns = [
     # Registro y login
@@ -16,6 +17,7 @@ urlpatterns = [
     path('auth/me/', userView.as_view(), name='user_view'),
     path('auth/user/', UserInfoView.as_view(), name='user_info'),
     path('auth/storage-info/', StorageInfoView.as_view(), name='storage_info'),
+    path('auth/profile-image/', ProfileImageUploadView.as_view(), name='profile_image_upload'),
 
     # Logout
     path('auth/logout/', LogoutView.as_view(), name='logout'),
