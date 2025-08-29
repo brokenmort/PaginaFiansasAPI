@@ -1,0 +1,167 @@
+/* 🔹 Reset general */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: "Lato", sans-serif;
+    background-image: url(../image/background.jpg);
+    background-color: rgb(197, 195, 195);
+    background-blend-mode: multiply;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    overflow-x: hidden;
+}
+
+/* 🔹 Contenedor principal */
+.contenedor-padre {
+    background: linear-gradient(#606c3886, #90b067);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 1000px;
+    min-width: 300px;
+    padding: 20px 30px;
+    border-radius: 20px;
+    margin: 20px auto;
+    box-sizing: border-box;
+}
+
+/* 🔹 Contenedor interno */
+.contenedor {
+    width: 100%;
+    background: rgba(222, 222, 222, 0.176);
+    border-radius: 50px;
+    padding: 30px;
+    box-shadow: 0px 10px 15px rgba(1,1,1,0.1);
+}
+
+/* 🔹 Username: imagen + nombre + botón */
+.username {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start; /* Imagen y texto alineados arriba */
+    gap: 0px;
+    margin-bottom: 20px;
+}
+
+/* 🔹 Imagen de perfil */
+.profile-image-preview {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid #a26127;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    font-size: 3em;
+    color: #a26127;
+    flex-shrink: 0;
+}
+#profileImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    display: none;
+}
+
+/* 🔹 Contenedor de texto y botón al lado de la imagen */
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* alineado a la izquierda */
+    justify-content: center;
+    gap: 10px;
+}
+
+/* 🔹 Nombre de usuario */
+#displayName {
+    font-size: 1.8em;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* 🔹 Botón Select Photo */
+.custom-file-upload {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    font-size: 14px;
+    background-color: #a26127;
+    color: white;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.custom-file-upload:hover { background-color: #dda15e; }
+input[type="file"] { display: none; }
+
+/* 🔹 Formulario de perfil */
+.profile-header {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+.form-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.form-row label { width: 40%; }
+.form-row input {
+    flex: 1;
+    padding: 12px;
+    border-radius: 50px;
+    border: none;
+    text-align: center;
+    box-shadow: 0px 5px 3px rgba(0,0,0,0.1);
+    background-color: rgba(222,222,222,0.3);
+}
+
+/* 🔹 Botones de acción */
+.button {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+#edit-btn, #save-btn, #cancel-btn {
+    padding: 12px 25px;
+    border-radius: 50px;
+    background-color: #a26127;
+    color: #fefae0;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+#edit-btn:hover, #save-btn:hover, #cancel-btn:hover { background-color: #dda15e; }
+
+/* 🔹 Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    top:0; left:0;
+    width:100%; height:100%;
+    background-color: rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.modal-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    width: 300px;
+}
+
+/* 🔹 Responsive */
+@media (max-width: 768px) {
+    .username { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .profile-image-preview { width: 100px; height: 100px; }
+}

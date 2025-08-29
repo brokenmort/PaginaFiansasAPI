@@ -1,0 +1,48 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2025-08-28T00:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2025.0.0",
+  "resources": [
+    { "_id": "wrk_finansas", "_type": "workspace", "name": "Finansas API", "scope": "collection" },
+    { "_id": "env_finansas_base", "_type": "environment", "parentId": "wrk_finansas", "name": "Base Environment", "data": { "baseUrl": "http://localhost:8000", "access": "", "ahorroId": "1" } },
+
+    { "_id": "fld_auth", "_type": "request_group", "parentId": "wrk_finansas", "name": "Auth" },
+    { "_id": "req_login", "_type": "request", "parentId": "fld_auth", "name": "Login", "method": "POST", "url": "{{ baseUrl }}/api/auth/login/", "body": { "mimeType": "application/json", "text": "{\n  \"email\": \"you@mail.com\",\n  \"password\": \"your-pass\"\n}" }, "headers": [ { "name": "Content-Type", "value": "application/json" } ] },
+    { "_id": "req_refresh", "_type": "request", "parentId": "fld_auth", "name": "Refresh Token", "method": "POST", "url": "{{ baseUrl }}/api/auth/token/refresh/", "body": { "mimeType": "application/json", "text": "{\n  \"refresh\": \"<paste-refresh-token>\"\n}" }, "headers": [ { "name": "Content-Type", "value": "application/json" } ] },
+    { "_id": "req_logout", "_type": "request", "parentId": "fld_auth", "name": "Logout", "method": "POST", "url": "{{ baseUrl }}/api/auth/logout/", "body": { "mimeType": "application/json", "text": "{}" }, "headers": [ { "name": "Authorization", "value": "Bearer {{ access }}" }, { "name": "Content-Type", "value": "application/json" } ] },
+
+    { "_id": "fld_users", "_type": "request_group", "parentId": "wrk_finansas", "name": "Usuarios" },
+    { "_id": "req_me", "_type": "request", "parentId": "fld_users", "name": "Perfil - Me", "method": "GET", "url": "{{ baseUrl }}/api/auth/me/", "headers": [ { "name": "Authorization", "value": "Bearer {{ access }}" } ] },
+    { "_id": "req_userinfo", "_type": "request", "parentId": "fld_users", "name": "Usuario - Info Basica", "method": "GET", "url": "{{ baseUrl }}/api/auth/user/", "headers": [ { "name": "Authorization", "value": "Bearer {{ access }}" } ] },
+
+    { "_id": "fld_ingresos", "_type": "request_group", "parentId": "wrk_finansas", "name": "Ingresos" },
+    { "_id": "req_ingresos_fijos_list", "_type": "request", "parentId": "fld_ingresos", "name": "IngresosFijos - List", "method": "GET", "url": "{{ baseUrl }}/api/IngresosFijos/", "headers": [ { "name": "Authorization", "value": "Bearer {{ access }}" } ] },
+    { "_id": "req_ingresos_fijos_create", "_type": "request", "parentId": "fld_ingresos", "name": "IngresosFijos - Create", "method": "POST", "url": "{{ baseUrl }}/api/IngresosFijos/", "body": { "mimeType": "application/json", "text": "{\n  \"name\": \"Salario\",\n  \"reason\": \"Pago mensual\",\n  \"quantity\": \"1000.00\",\n  \"period\": \"Mensual\"\n}" }, "headers": [ { "name": "Authorization", "value": "Bearer {{ access }}" }, { "name": "Content-Type", "value": "application/json" } ] },
+    { "_id": "req_ingresos_extra_list", "_type": "request", "parentId": "fld_ingresos", "name": "IngresosExtra - List", "method": "GET", "url": "{{ baseUrl }}/api/IngresosExtra/", "headers": [ { "name": "Authorization", "value": "Bearer {{ access }}" } ] },
+    { "_id": "req_ingresos_extra_create", "_type": "request", "parentId": "fld_ingresos", "name": "IngresosExtra - Create", "method": "POST", "url": "{{ baseUrl }}/api/IngresosExtra/", "body": { "mimeType": "application/json", "text": "{\n  \"name\": \"Freelance\",\n  \"reason\": \"Proyecto\",\n  \"quantity\": \"250.50\",\n  \"date\": \"2025-08-28\"\n}" }, "headers": [ { "name": "Authorization", "value": "Bearer {{ access }}" }, { "name": "Content-Type", "value": "application/json" } ] },
+
+    { "_id": "fld_egresos", "_type": "request_group", "parentId": "wrk_finansas", "name": "Egresos" },
+    { "_id": "req_egresos_fijos_list", "_type": "request", "parentId": "fld_egresos", "name": "EgresosFijos - List", "method": "GET", "url": "{{ baseUrl }}/api/EgresosFijos/", "headers": [ { "name": "Authorization", "value": "Bearer {{ access }}" } ] },
+    { "_id": "req_egresos_fijos_create", "_type": "request", "parentId": "fld_egresos", "name": "EgresosFijos - Create", "method": "POST", "url": "{{ baseUrl }}/api/EgresosFijos/", "body": { "mimeType": "application/json", "text": "{\n  \"name\": \"Renta\",\n  \"reason\": \"Alquiler\",\n  \"quantity\": \"500.00\",\n  \"period\": \"Mensual\"\n}" }, "headers": [ { "name": "Authorization", "value": "Bearer {{ access }}" }, { "name": "Content-Type", "value": "application/json" } ] },
+    { "_id": "req_egresos_extra_create", "_type": "request", "parentId": "fld_egresos", "name": "EgresosExtra - Create", "method": "POST", "url": "{{ baseUrl }}/api/EgresosExtra/", "body": { "mimeType": "application/json", "text": "{\n  \"name\": \"Comida\",\n  \"reason\": \"Restaurante\",\n  \"quantity\": \"25.00\",\n  \"date\": \"2025-08-28\"\n}" }, "headers": [ { "name": "Authorization", "value": "Bearer {{ access }}" }, { "name": "Content-Type", "value": "application/json" } ] },
+
+    { "_id": "fld_ahorros", "_type": "request_group", "parentId": "wrk_finansas", "name": "Ahorros" },
+    { "_id": "req_ahorro_create", "_type": "request", "parentId": "fld_ahorros", "name": "Ahorros - Create", "method": "POST", "url": "{{ baseUrl }}/api/ahorros/", "body": { "mimeType": "application/json", "text": "{\n  \"name\": \"Viaje\",\n  \"reason\": \"Vacaciones\",\n  \"quantity\": \"2000.00\",\n  \"payment\": \"200.00\",\n  \"loan\": false,\n  \"period\": \"Mensual\",\n  \"accrued\": \"0.00\",\n  \"missing\": \"2000.00\"\n}" }, "headers": [ { "name": "Authorization", "value": "Bearer {{ access }}" }, { "name": "Content-Type", "value": "application/json" } ] },
+    { "_id": "req_ahorro_depositar", "_type": "request", "parentId": "fld_ahorros", "name": "Ahorros - Depositar", "method": "POST", "url": "{{ baseUrl }}/api/ahorros/{{ ahorroId }}/depositar/", "body": { "mimeType": "application/json", "text": "{\n  \"amount\": \"200.00\",\n  \"note\": \"salario\"\n}" }, "headers": [ { "name": "Authorization", "value": "Bearer {{ access }}" }, { "name": "Content-Type", "value": "application/json" } ] },
+    { "_id": "req_ahorro_retirar", "_type": "request", "parentId": "fld_ahorros", "name": "Ahorros - Retirar", "method": "POST", "url": "{{ baseUrl }}/api/ahorros/{{ ahorroId }}/retirar/", "body": { "mimeType": "application/json", "text": "{\n  \"amount\": \"50.00\",\n  \"note\": \"imprevisto\"\n}" }, "headers": [ { "name": "Authorization", "value": "Bearer {{ access }}" }, { "name": "Content-Type", "value": "application/json" } ] },
+    { "_id": "req_ahorro_movs_list", "_type": "request", "parentId": "fld_ahorros", "name": "Ahorros - Movimientos (List)", "method": "GET", "url": "{{ baseUrl }}/api/ahorros/{{ ahorroId }}/movimientos/", "headers": [ { "name": "Authorization", "value": "Bearer {{ access }}" } ] },
+    { "_id": "req_ahorro_movs_create", "_type": "request", "parentId": "fld_ahorros", "name": "Ahorros - Movimientos (Create)", "method": "POST", "url": "{{ baseUrl }}/api/ahorros/{{ ahorroId }}/movimientos/", "body": { "mimeType": "application/json", "text": "{\n  \"amount\": \"10.00\",\n  \"date\": \"2025-08-28\",\n  \"note\": \"ajuste\"\n}" }, "headers": [ { "name": "Authorization", "value": "Bearer {{ access }}" }, { "name": "Content-Type", "value": "application/json" } ] },
+
+    { "_id": "fld_prestamos", "_type": "request_group", "parentId": "wrk_finansas", "name": "Prestamos" },
+    { "_id": "req_prestamos_list", "_type": "request", "parentId": "fld_prestamos", "name": "Prestamos - List", "method": "GET", "url": "{{ baseUrl }}/api/prestamos/", "headers": [ { "name": "Authorization", "value": "Bearer {{ access }}" } ] },
+    { "_id": "req_prestamos_create", "_type": "request", "parentId": "fld_prestamos", "name": "Prestamos - Create", "method": "POST", "url": "{{ baseUrl }}/api/prestamos/", "body": { "mimeType": "application/json", "text": "{\n  \"name\": \"Prestamo personal\",\n  \"reason\": \"Compra\",\n  \"quantity\": \"3000.00\",\n  \"payment\": \"150.00\",\n  \"period\": \"Mensual\",\n  \"status\": \"Pendiente\",\n  \"answer\": \"Favorable\"\n}" }, "headers": [ { "name": "Authorization", "value": "Bearer {{ access }}" }, { "name": "Content-Type", "value": "application/json" } ] },
+
+    { "_id": "fld_reportes", "_type": "request_group", "parentId": "wrk_finansas", "name": "Reportes" },
+    { "_id": "req_report_summary", "_type": "request", "parentId": "fld_reportes", "name": "Summary", "method": "GET", "url": "{{ baseUrl }}/api/reports/summary/?start=2025-08-01&end=2025-08-31", "headers": [ { "name": "Authorization", "value": "Bearer {{ access }}" } ] },
+    { "_id": "req_report_cashflow", "_type": "request", "parentId": "fld_reportes", "name": "Cashflow Monthly", "method": "GET", "url": "{{ baseUrl }}/api/reports/cashflow/monthly/?start=2025-01-01&end=2025-12-31", "headers": [ { "name": "Authorization", "value": "Bearer {{ access }}" } ] },
+
+    { "_id": "env_local", "_type": "environment", "parentId": "env_finansas_base", "name": "Local", "data": { "baseUrl": "http://localhost:8000", "access": "", "ahorroId": "1" } },
+    { "_id": "env_heroku", "_type": "environment", "parentId": "env_finansas_base", "name": "Heroku", "data": { "baseUrl": "https://pagina-web-finansas-b6474cfcee14.herokuapp.com", "access": "", "ahorroId": "1" } }
+  ]
+}
