@@ -123,45 +123,10 @@ class userView(APIView):
 # -----------------------------------------------------------
 # DEBUG: INFO DE STORAGE
 # -----------------------------------------------------------
-class StorageInfoView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        from django.conf import settings
-        import os
-        out = {}
-        try:
-            out["DEFAULT_FILE_STORAGE"] = getattr(settings, 'DEFAULT_FILE_STORAGE', None)
-        except Exception as e:
-            out["DEFAULT_FILE_STORAGE"] = f"error: {e}"
-        try:
-            out["CLOUDINARY_URL_present"] = bool(os.environ.get('CLOUDINARY_URL'))
-        except Exception as e:
-            out["CLOUDINARY_URL_present"] = f"error: {e}"
-        try:
-            out["default_storage"] = default_storage.__class__.__name__
-        except Exception as e:
-            out["default_storage"] = f"error: {e}"
-        try:
-            user = request.user
-            out["profile_image_storage"] = user._meta.get_field('profile_image').storage.__class__.__name__
-        except Exception as e:
-            out["profile_image_storage"] = f"error: {e}"
-        # Intento de upload remoto de prueba a Cloudinary para ver error exacto
-        try:
-            from cloudinary.uploader import upload as _c_upload
-            res = _c_upload('https://res.cloudinary.com/demo/image/upload/sample.jpg')
-            out["cloudinary_test"] = {
-                "ok": True,
-                "secure_url": res.get("secure_url")
-            }
-        except Exception as e:
-            out["cloudinary_test"] = {
-                "ok": False,
-                "error": str(e),
-                "type": e.__class__.__name__
-            }
-        return Response(out)
+"""
+Nota: Se eliminaron las vistas de diagnóstico usadas durante la integración
+de Cloudinary y el debug de despliegue para mantener el código limpio.
+"""
 
 
 # -----------------------------------------------------------
