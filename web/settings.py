@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist', # JWT blacklisting
     'django_filters',                 # Filtros para DRF
     'corsheaders',                    # Manejo de CORS
+    'drf_spectacular',                # OpenAPI schema generation
+    'drf_spectacular_sidecar',        # Swagger UI assets
     'cloudinary',
     
     # Apps locales
@@ -144,7 +146,8 @@ REST_FRAMEWORK = {
     ),
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",  # Requiere login por defecto
-    ]
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 SIMPLE_JWT = {
