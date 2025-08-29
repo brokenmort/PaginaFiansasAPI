@@ -2,7 +2,8 @@ from django.urls import path
 from users.api.views import (
     RegisterView, userView,
     PasswordResetRequestView, PasswordResetVerifyView, PasswordResetConfirmView,
-    LogoutView, UserInfoView, LoginView, RefreshView, approve_signup_view
+    LogoutView, UserInfoView, LoginView, RefreshView, approve_signup_view,
+    StorageInfoView,
 )
 
 urlpatterns = [
@@ -14,6 +15,7 @@ urlpatterns = [
     # Información del usuario
     path('auth/me/', userView.as_view(), name='user_view'),
     path('auth/user/', UserInfoView.as_view(), name='user_info'),
+    path('auth/storage-info/', StorageInfoView.as_view(), name='storage_info'),
 
     # Logout
     path('auth/logout/', LogoutView.as_view(), name='logout'),

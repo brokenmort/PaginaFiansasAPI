@@ -22,6 +22,7 @@ from django.http import HttpResponse, HttpResponseForbidden, HttpResponseBadRequ
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db import transaction
 from .utils import approve_signup_and_send_code
+from django.core.files.storage import default_storage
 
 # -----------------------------------------------------------
 # VISTA DE REGISTRO DE USUARIO
@@ -117,6 +118,27 @@ class userView(APIView):
             serializer.save()  # Guarda cambios en la base de datos
             return Response(UserUpdateSerializer(user, context={'request': request}).data)  # Devuelve datos actualizados con URL absoluta
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# -----------------------------------------------------------
+# DEBUG: INFO DE STORAGE
+# -----------------------------------------------------------
+class StorageInfoView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        from django.conf import settings
+        user = request.user
+        try:
+            field_storage = user._meta.get_field('profile_image').storage.__class__.__name__
+        except Exception:
+            field_storage = None
+        return Response({
+            "DEFAULT_FILE_STORAGE": getattr(settings, 'DEFAULT_FILE_STORAGE', None),
+            "CLOUDINARY_URL_present": bool(os.environ.get('CLOUDINARY_URL')),
+            "default_storage": default_storage.__class__.__name__,
+            "profile_image_storage": field_storage,
+        })
 
 
 # -----------------------------------------------------------
@@ -402,5 +424,6 @@ def approve_signup_view(request, token: str):
     except Exception as e:
         return HttpResponseBadRequest(f"Error: {e}")
     return HttpResponse("Solicitud aprobada y cÃ³digo enviado al solicitante.")
+
 
 
