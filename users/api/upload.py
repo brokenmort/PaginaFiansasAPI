@@ -20,15 +20,14 @@ class ProfileImageUploadView(APIView):
     )
     def post(self, request):
         user = request.user
-        f = request.FILES.get('profile_image')
-        if not f:
-            return Response({"detail": "Falta profile_image"}, status=400)
-        user.profile_image.save(f.name, f, save=True)
         try:
-            url = user.profile_image.url
-        except Exception:
-            url = None
-        if url and not str(url).startswith(("http://", "https://")):
-            url = request.build_absolute_uri(url)
-        return Response({"profile_image": url}, status=200)
-
+            f = request.FILES.get('profile_image')
+            if not f:
+                return Response({"detail": "Falta profile_image"}, status=400)
+            user.profile_image.save(f.name, f, save=True)
+            url = getattr(user.profile_image, 'url', None)
+            if url and not str(url).startswith(("http://", "https://")):
+                url = request.build_absolute_uri(url)
+            return Response({"profile_image": url}, status=200)
+        except Exception as e:
+            return Response({"detail": str(e), "type": e.__class__.__name__}, status=500)
