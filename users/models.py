@@ -1,5 +1,6 @@
 # Importamos las clases necesarias desde Django
 from django.db import models  # Para definir modelos y campos de base de datos
+import os
 from django.contrib.auth.models import AbstractUser, BaseUserManager  # Para crear un usuario personalizado
 from django.utils import timezone  # Para manejar fechas y horas con zona horaria
 import datetime  # Para trabajar con operaciones de fecha y tiempo
@@ -131,3 +132,17 @@ class PendingSignup(models.Model):
 
     def __str__(self):
         return f"{self.email} (aprobado: {bool(self.approved_at)})"
+
+# ======================================================
+# Forzar Cloudinary para profile_image si está configurado
+# (no requiere migración; ajusta el storage en tiempo de carga)
+# ======================================================
+try:
+    from django.conf import settings as _settings
+    if os.environ.get("CLOUDINARY_URL") or getattr(_settings, 'DEFAULT_FILE_STORAGE', '').endswith('MediaCloudinaryStorage'):
+        from cloudinary_storage.storage import MediaCloudinaryStorage
+        # Cambia el storage del campo profile_image a Cloudinary
+        User._meta.get_field('profile_image').storage = MediaCloudinaryStorage()
+except Exception:
+    # Silenciar cualquier error de import o en entorno local sin Cloudinary
+    pass
