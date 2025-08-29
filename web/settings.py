@@ -283,3 +283,53 @@ if _cloudinary_url:
         'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
         'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
     }
+
+# ===== CORS/CSRF adjustments for frontend integration =====
+# Ensure CorsMiddleware is at the start of the stack
+try:
+    if 'corsheaders.middleware.CorsMiddleware' in MIDDLEWARE:
+        _mw = list(MIDDLEWARE)
+        _mw.remove('corsheaders.middleware.CorsMiddleware')
+        MIDDLEWARE = ['corsheaders.middleware.CorsMiddleware', *_mw]
+    else:
+        MIDDLEWARE = ['corsheaders.middleware.CorsMiddleware', *list(MIDDLEWARE)]
+except Exception:
+    pass
+
+# Add Render origin(s) if missing
+_extra_cors_origins = [
+    'https://gestion-finansas-personales.onrender.com',
+]
+try:
+    CORS_ALLOWED_ORIGINS = list(CORS_ALLOWED_ORIGINS)
+except NameError:
+    CORS_ALLOWED_ORIGINS = []
+for _o in _extra_cors_origins:
+    if _o not in CORS_ALLOWED_ORIGINS:
+        CORS_ALLOWED_ORIGINS.append(_o)
+
+# Allow common auth headers and methods
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+CORS_ALLOW_METHODS = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']
+
+# If using cookies/CSRF across domains
+CORS_ALLOW_CREDENTIALS = True
+
+# CSRF trusted origins (Render)
+try:
+    CSRF_TRUSTED_ORIGINS = list(CSRF_TRUSTED_ORIGINS)
+except NameError:
+    CSRF_TRUSTED_ORIGINS = []
+for _d in ['https://gestion-finansas-personales.onrender.com']:
+    if _d not in CSRF_TRUSTED_ORIGINS:
+        CSRF_TRUSTED_ORIGINS.append(_d)
