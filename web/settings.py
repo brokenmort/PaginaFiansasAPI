@@ -248,3 +248,32 @@ CSRF_TRUSTED_ORIGINS = [
 
 # Asegura que la URL de estáticos sea absoluta para que funcione en rutas como /docs/
 STATIC_URL = "/static/"
+
+# ======================================================
+# MEDIA: Cloudinary en producción (si está configurado)
+# ======================================================
+
+# Si definimos CLOUDINARY_URL en variables de entorno, usamos Cloudinary para almacenar MEDIA
+_cloudinary_url = os.environ.get("CLOUDINARY_URL")
+if _cloudinary_url:
+    try:
+        # Insertar apps de cloudinary dinámicamente si no están ya
+        if 'cloudinary_storage' not in INSTALLED_APPS:
+            # antes de 'django.contrib.staticfiles' según recomendación
+            idx = INSTALLED_APPS.index('django.contrib.staticfiles') if 'django.contrib.staticfiles' in INSTALLED_APPS else len(INSTALLED_APPS)
+            INSTALLED_APPS.insert(idx, 'cloudinary_storage')
+        if 'cloudinary' not in INSTALLED_APPS:
+            INSTALLED_APPS.append('cloudinary')
+    except Exception:
+        # Si por alguna razón falla la inserción, aseguramos que existan igualmente
+        INSTALLED_APPS = list(INSTALLED_APPS) + ['cloudinary_storage', 'cloudinary']
+
+    # Storage por defecto para archivos subidos (MEDIA)
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+    # Configuración opcional; si usas CLOUDINARY_URL no es necesario el dict
+    CLOUDINARY_STORAGE = {
+        'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
+        'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
+        'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+    }

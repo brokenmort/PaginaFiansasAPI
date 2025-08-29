@@ -54,10 +54,27 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     """
     Serializer usado para retornar información básica de usuario.
+    Asegura que profile_image sea una URL absoluta si es posible.
     """
+    profile_image = serializers.SerializerMethodField()
+
+    def get_profile_image(self, obj):
+        if not getattr(obj, 'profile_image', None):
+            return None
+        try:
+            url = obj.profile_image.url
+        except Exception:
+            return None
+        # Si ya es absoluta (Cloudinary, S3), devolver tal cual
+        if isinstance(url, str) and url.startswith(('http://', 'https://')):
+            return url
+        # Si es relativa, intentar construir URL absoluta con el request en contexto
+        request = self.context.get('request') if hasattr(self, 'context') else None
+        return request.build_absolute_uri(url) if request else url
+
     class Meta:
         model = User
-        fields = ('id', 'email', 'first_name', 'last_name', 'profile_image')  # Añadimos la imagen
+        fields = ('id', 'email', 'first_name', 'last_name', 'profile_image')
 
 
 # -----------------------------------------------------------
