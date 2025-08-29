@@ -47,6 +47,21 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         instance.save()  # Guardamos usuario
         return instance
 
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        # Normaliza profile_image a URL absoluta cuando sea posible
+        url = None
+        try:
+            if getattr(instance, 'profile_image', None):
+                url = instance.profile_image.url
+        except Exception:
+            url = None
+        if url and not str(url).startswith(("http://", "https://")):
+            request = getattr(self, 'context', {}).get('request') if hasattr(self, 'context') else None
+            url = request.build_absolute_uri(url) if request else url
+        data['profile_image'] = url
+        return data
+
 
 # -----------------------------------------------------------
 # SERIALIZER PARA MOSTRAR DATOS BÁSICOS DEL USUARIO
@@ -87,6 +102,20 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('first_name', 'last_name', 'birthday', 'phone', 'country', 'profile_image')
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        url = None
+        try:
+            if getattr(instance, 'profile_image', None):
+                url = instance.profile_image.url
+        except Exception:
+            url = None
+        if url and not str(url).startswith(("http://", "https://")):
+            request = getattr(self, 'context', {}).get('request') if hasattr(self, 'context') else None
+            url = request.build_absolute_uri(url) if request else url
+        data['profile_image'] = url
+        return data
 
 
 # -----------------------------------------------------------
