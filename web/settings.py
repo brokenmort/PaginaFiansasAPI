@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'cloudinary_storage',             # Storage de media en Cloudinary (antes de staticfiles)
     'django.contrib.staticfiles',
     
     # Terceros
@@ -52,6 +53,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist', # JWT blacklisting
     'django_filters',                 # Filtros para DRF
     'corsheaders',                    # Manejo de CORS
+    'cloudinary',
     
     # Apps locales
     'users', 
@@ -209,7 +211,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 # En Heroku (DEBUG=False), usa /tmp para archivos de media (FS efímero pero escribible)
-if not DEBUG:
+if not DEBUG and not os.environ.get('CLOUDINARY_URL'):
+    # Solo usar FS efímero si NO usamos Cloudinary
     MEDIA_ROOT = Path('/tmp') / 'media'
 
 # ======================================================

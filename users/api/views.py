@@ -75,6 +75,7 @@ class userView(APIView):
     Vista para obtener y actualizar informaciÃ³n del usuario autenticado.
     """
     permission_classes = [IsAuthenticated]  # Solo usuarios logueados
+    parser_classes = [MultiPartParser, FormParser]  # Soporta envío de archivos para profile_image
 
     @swagger_auto_schema(operation_summary='Perfil del usuario (detalle)', tags=['Usuarios'],
                         responses={200: openapi.Response('OK', examples={'application/json': {
@@ -114,7 +115,7 @@ class userView(APIView):
         serializer = UserUpdateSerializer(user, data=request.data, partial=True)  # Permite actualizaciÃ³n parcial
         if serializer.is_valid(raise_exception=True):  # Valida datos enviados
             serializer.save()  # Guarda cambios en la base de datos
-            return Response(serializer.data)  # Devuelve datos actualizados
+            return Response(UserUpdateSerializer(user, context={'request': request}).data)  # Devuelve datos actualizados con URL absoluta
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
